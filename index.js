@@ -11,6 +11,7 @@ var downHtml = fs.readFileSync('./carrier.txt');
 
 $ = cheer.load(downHtml);
 
+var rsHtml = $.html();
 var imgs = $('#bodyContent .image');
 var i = 0;
 for(img in imgs){
@@ -22,9 +23,29 @@ for(img in imgs){
       var dirs = picUrl.split('/');
       var filename = dirs[dirs.length -1];
 
-      request("https:"+picUrl).pipe(fs.createWriteStream(baseDir + filename));
+      // request("https:"+picUrl).pipe(fs.createWriteStream(baseDir + filename));
 
-      console.log(i++ +"--"+filename);
+      rsHtml = rsHtml.replace(picUrl,baseDir+filename);
+      // break;
+      //console.log(i++ +"--"+filename);
     }
 }
+
+var linkStyle = /<link rel=\"stylesheet\" href=\"?[^\"]*\">/g
+var mactches = rsHtml.match(linkStyle)
+for (var i=0;i < mactches.length ; i++)
+{
+  rsHtml = rsHtml.replace(mactches[i],'<link rel="stylesheet" href="wiki'+(i+1)+'.css"');
+}
+
+var script = /<script>?[^<]*<\/script>/g;
+mactches = rsHtml.match(script)
+for (var i=0;i < mactches.length ; i++)
+{
+  console.log(mactches[i]);   //Cat  cat
+}
+
+var srcset = /srcset=(\"?[^\"]*\")/g;
+
+ fs.writeFileSync('td.html',rsHtml.replace(srcset,''));
 
