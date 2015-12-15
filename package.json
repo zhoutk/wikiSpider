@@ -6,12 +6,20 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:zhoutk/wikiSpider.git"
+  },
   "dependencies": {
-    "simplecrawler": "*"
+    "lodash":"*",
+    "promise": "*",
+    "promised-rest-client": "*",
+    "jsdom": "*",
+    "cheerio": "*"
   },
   "keywords": [
     "spider"
   ],
   "author": "zhoutk@189.cn",
-  "license": “MIT”
+  "license": "MIT"
 }
