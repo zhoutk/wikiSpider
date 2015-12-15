@@ -11,11 +11,12 @@
     "url": "git@github.com:zhoutk/wikiSpider.git"
   },
   "dependencies": {
-    "lodash":"*",
+    "cheerio": "*",
+    "jsdom": "*",
+    "lodash": "*",
     "promise": "*",
     "promised-rest-client": "*",
-    "jsdom": "*",
-    "cheerio": "*"
+    "request": "^2.67.0"
   },
   "keywords": [
     "spider"
