@@ -2,7 +2,7 @@ var cheer = require('cheerio');
 var Promise = require('promise');
 var data = require('promised-rest-client')({url: 'https://zh.wikipedia.org/zh-cn/'});
 var spiderSingle = require('./spiderSingle.js');
-var regKey = ['航空母舰','航空母艦'];
+var regKey = ['航空母舰','航母'];
 var allKeys = [];
 var keys = ['Category:%E8%88%AA%E7%A9%BA%E6%AF%8D%E8%88%B0'];
 
@@ -21,14 +21,14 @@ var key = keys.shift();
       if(typeof links[x].attribs !== 'undefined' && links[x].attribs.title !== 'undefined' && links[x].attribs.href !== 'undefined'){
         title = links[x].attribs.title;
         href = links[x].attribs.href;
-        // var reg = /[:|：|(|)（|）]/;
-        // if(reg.test(title))
-        //   continue;
+        var regNotExist = /页面不存在/;
+        if(regNotExist.test(title))
+          continue;
         if(title && href && includeKeys(title) && !existsInKeys(title)){
           href = href.split('/')[href.split('/').length-1];
           keys.push(href);
           allKeys.push(title);
-          //console.log(title)
+          // console.log(title)
         }
       }
     }

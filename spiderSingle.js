@@ -8,7 +8,7 @@ var baseDir = "pics/";
 module.exports = function(downHtml){
   $ = cheer.load(downHtml);
   var rsHtml = $.html();
-  var imgs = $('#bodyContent .image');
+  var imgs = $('.image');
   for(img in imgs){
     if(typeof imgs[img].attribs === 'undefined' || typeof imgs[img].attribs.href === 'undefined')
       {continue;}
