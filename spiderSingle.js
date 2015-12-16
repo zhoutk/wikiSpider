@@ -7,7 +7,6 @@ var baseDir = "pics/";
 
 module.exports = function(downHtml){
   $ = cheer.load(downHtml);
-
   var rsHtml = $.html();
   var imgs = $('#bodyContent .image');
   for(img in imgs){
@@ -45,4 +44,6 @@ module.exports = function(downHtml){
   fs.writeFileSync('./pages/'+title+'.html',rsHtml);
   console.log('抓取- '+title+' -成功。')
 }
+
+
 
