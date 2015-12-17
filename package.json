@@ -11,6 +11,8 @@
     "url": "git@github.com:zhoutk/wikiSpider.git"
   },
   "dependencies": {
+    "cheerio": "*",
+    "lodash": "^3.10.1",
     "promise": "*",
     "promised-rest-client": "*",
     "request": "^2.67.0",
