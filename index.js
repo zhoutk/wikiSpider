@@ -7,7 +7,7 @@ var __ = require('lodash');
 var regKey = /航空母舰|航母/;
 var allKeys = [];
 var finished = [];
-var keys = ['Category:%E8%88%AA%E7%A9%BA%E6%AF%8D%E8%88%B0'];
+var keys = ['%E8%88%AA%E7%A9%BA%E6%AF%8D%E8%88%B0'];    //Category:
 
 var key = keys.shift();
 (function doNext(key){

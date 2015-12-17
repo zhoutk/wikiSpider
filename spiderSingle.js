@@ -39,7 +39,17 @@ module.exports = function(downHtml){
       rsHtml = rsHtml.replace(mactches[i],mactches[i].indexOf('stylesheet')>-1?'<link rel="stylesheet" href="wiki'+(i+1)+'.css"':'');
     }
   })
-  
+
+  var ms = rsHtml.match(/src=\"\/\/upload\.wikimedia\.org?[^\"]*\"/g);
+  for (var i=0;ms && i < ms.length ; i++)
+  {
+    var picUrl = ms[i].split('"')[1];
+    var dirs = picUrl.split('.');
+    var filename = baseDir+uuid.v1()+'.'+dirs[dirs.length -1];
+    request("https:"+picUrl).pipe(fs.createWriteStream('pages/'+filename));
+    rsHtml = rsHtml.replace(ms[i],'src="'+filename+'"');
+  }
+
   var title = $('#firstHeading').text();
   fs.writeFileSync('./pages/'+title+'.html',rsHtml);
   console.log('抓取标题为…………'+title+'…………的页面成功。')
