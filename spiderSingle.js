@@ -42,7 +42,7 @@ module.exports = function(downHtml){
   
   var title = $('#firstHeading').text();
   fs.writeFileSync('./pages/'+title+'.html',rsHtml);
-  console.log('抓取- '+title+' -成功。')
+  console.log('抓取标题为…………'+title+'…………的页面成功。')
 }
 
 

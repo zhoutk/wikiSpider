@@ -21,7 +21,8 @@ var key = keys.shift();
     $ = cheer.load(downHtml);
     var filename = $('#firstHeading').text();
 
-    if(__.indexOf(finished,filename == -1)){
+    if(__.indexOf(finished,filename) == -1){
+      finished.push(filename);
       var links = $('#bodyContent a');
       for(x in links){
         var title, href;
@@ -41,13 +42,12 @@ var key = keys.shift();
       }
 
       if(!(/:|：/.test(key))){
-        finished.push(filename);
         spiderSingle(downHtml);
       }else{
-        console.log('跳过标题为：'+filename +' 的页面。')
+        console.log('跳过--存储--标题为：'+filename +' 的页面。')
       }
     }else{
-      console.log('跳过标题为：'+filename +' 的页面。')
+      console.log('跳过**处理**标题为：'+filename +' 的页面。')
     }
 
     key = keys.shift();
