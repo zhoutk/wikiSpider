@@ -5,7 +5,7 @@ var uuid = require('uuid');
 
 var baseDir = "pics/";
 
-module.exports = function(downHtml){
+module.exports = function(downHtml,key){
   $ = cheer.load(downHtml);
   var title = $('#firstHeading').text();
   var rsHtml = $.html();
@@ -57,8 +57,9 @@ module.exports = function(downHtml){
     rsHtml = rsHtml.replace(ms[i],'src="'+filename+'"');
   }
 
-  fs.writeFileSync('./pages/'+title.replace('/','_')+'.html',rsHtml);
-  console.log('抓取标题为…………'+title.replace('/','_')+'…………的页面成功。')
+  var name = key.replace(/\/|,/g,'_')+'_' + title.replace(/\//g,'_');
+  fs.writeFileSync('./pages/'+name+'.html',rsHtml);
+  // console.log('抓取标题为《'+name+'》的页面成功。')
 }
 
 
