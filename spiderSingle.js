@@ -7,6 +7,7 @@ var baseDir = "pics/";
 
 module.exports = function(downHtml){
   $ = cheer.load(downHtml);
+  var title = $('#firstHeading').text();
   var rsHtml = $.html();
   var imgs = $('.image');
   for(img in imgs){
@@ -17,9 +18,11 @@ module.exports = function(downHtml){
         var picUrl = imgs[img].children[0].attribs.src;
         var dirs = picUrl.split('.');
         var filename = baseDir+uuid.v1()+'.'+dirs[dirs.length -1];
-
-        request("https:"+picUrl).pipe(fs.createWriteStream('pages/'+filename));
-
+        try {
+          request("https:"+picUrl).pipe(fs.createWriteStream('pages/'+filename));
+        } catch (e) {
+          console.log("图片下载错误,title:"+title +"url:"+picUrl)
+        }
         rsHtml = rsHtml.replace(picUrl,filename);
         // console.log(picUrl);
       }
@@ -46,13 +49,16 @@ module.exports = function(downHtml){
     var picUrl = ms[i].split('"')[1];
     var dirs = picUrl.split('.');
     var filename = baseDir+uuid.v1()+'.'+dirs[dirs.length -1];
-    request("https:"+picUrl).pipe(fs.createWriteStream('pages/'+filename));
+    try {
+      request("https:"+picUrl).pipe(fs.createWriteStream('pages/'+filename));
+    } catch (e) {
+      console.log("图片下载错误,title:"+title +"url:"+picUrl)
+    }
     rsHtml = rsHtml.replace(ms[i],'src="'+filename+'"');
   }
 
-  var title = $('#firstHeading').text();
-  fs.writeFileSync('./pages/'+title+'.html',rsHtml);
-  console.log('抓取标题为…………'+title+'…………的页面成功。')
+  fs.writeFileSync('./pages/'+title.replace('/','_')+'.html',rsHtml);
+  console.log('抓取标题为…………'+title.replace('/','_')+'…………的页面成功。')
 }
 
 
