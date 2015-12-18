@@ -5,73 +5,54 @@ var spiderSingle = require('./spiderSingle.js');
 var fs = require('fs');
 var __ = require('lodash');
 
-var allKeys = [];
-var finished = [];
-var keys = ['Category:%E9%A3%9B%E6%A9%9F'];    //Category:
-
-var finishedFiles = fs.readdirSync('./pages','utf-8');
-if(finishedFiles){
-  finishedFiles.forEach(function(al){
-    if(__.endsWith(al,'.html')){
-      finished.push(al.split('.')[0])
-    }
-  })
-}
+var keys = ['%E9%A3%9B%E6%A9%9F'];    //Category:
 
 var key = keys.shift();
 (function doNext(key){
+  var tmp = key.split(',');
+  var realKey = 'Category:'+tmp[tmp.length-1];
 
   data.get({
-    url:key,
+    url:realKey,
     qs:null
   }).then(function(downHtml){
-    console.log('开始处理：'+decodeURI(key)+'，队列中还有'+keys.length+'个未处理。')
+    console.log('开始处理：【'+decodeURI(key)+'】分类，还有'+keys.length+'个分类未处理。')
 
     $ = cheer.load(downHtml);
-    $('.catlinks').remove();
-    $('#topicpath').remove();
-    $('.boilerplate').remove();
-    $('.citation').remove();
-    $('.reflist').remove();
-    $('.navbox').remove();
-    $('.mbox-small').remove()
-    var filename = $('#firstHeading').text().replace('/','_');
-
-    if(__.indexOf(finished,filename) == -1){
-      finished.push(filename);
-      if(key.indexOf('Category:') != -1){           //如果是分类，取页面有效链接
-        var links = $('#bodyContent a');
-        for(x in links){
-          var title, href;
-          if(typeof links[x].attribs !== 'undefined' && links[x].attribs.href !== undefined){
-            title = links[x].attribs.href;
-            if(title.indexOf('/wiki/') == 0){
-              title = title.replace('/wiki/','');
-              href = title;
-              title = decodeURI(title).replace('/','_');
-              var regNotExist = /页面不存在|编辑小节|php|wikipedia|\.|commons|Special|wikimedia|Portal|Template|模板/gi;
-              if(regNotExist.test(title))
-                continue;
-              if(__.indexOf(allKeys,title) == -1){
-                keys.push(href);
-                allKeys.push(title);
-                // console.log('add new key --------- '+title)
-              }
-            }
-          }
+    var links = $('#mw-subcategories a');       //子目录
+    for(x in links){
+      var href;
+      if(typeof links[x].attribs !== 'undefined' && links[x].attribs.href !== undefined){
+        href = links[x].attribs.href;
+        if(href.indexOf('/wiki/') == 0){
+          href = href.replace('/wiki/Category:','');
+          keys.push(key+','+href);
+          // console.log('add new Category --------- '+decodeURI(href))
         }
-      }else{                                //如果是页面，抓取图片并存储
-          spiderSingle(downHtml);
       }
-    }else{
-      console.log('跳过----处理----标题为：'+filename +' 的页面。')
+    }
+
+    links = $('#mw-pages a');       //页面
+    for(x in links){
+      var href;
+      if(typeof links[x].attribs !== 'undefined' && links[x].attribs.href !== undefined){
+        href = links[x].attribs.href;
+        if(href.indexOf('/wiki/') == 0){
+           href = href.replace('/wiki/','');
+           var regNotExist = /页面不存在|编辑小节|php|wikipedia|\.|commons|Special|wikimedia|Portal|Template|模板/gi;
+           if(regNotExist.test(href))
+             continue;
+           spiderSingle(downHtml,key);
+           // console.log('download '+decodeURI(href)+'.html ok.')
+        }
+      }
     }
 
     key = keys.shift();
     if(key){
       doNext(key);
     }else{
-      console.log('抓取任务顺利完成，共处理了'+allKeys.length+'个页面。')
+      console.log('抓取任务顺利完成！')
     }
   }).catch(function(err){
     console.error("download ------- err ------- "+decodeURI(key));
@@ -79,7 +60,7 @@ var key = keys.shift();
     if(key){
       doNext(key);
     }else{
-      console.log('抓取任务完成，共处理了'+allKeys.length+'个页面。')
+      console.log('抓取任务完成了。')
     }
   })
 
